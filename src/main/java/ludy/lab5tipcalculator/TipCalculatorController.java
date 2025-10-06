@@ -39,7 +39,7 @@ public class TipCalculatorController {
 
     // calculates and displays the tip and total amounts
     @FXML
-    private void calculateButtonPressed(ActionEvent event) {
+    private void calculate() {
         try {
             BigDecimal amount = new BigDecimal(amountTextField.getText());
             BigDecimal tip = amount.multiply(tipPercentage);
@@ -49,9 +49,8 @@ public class TipCalculatorController {
             totalTextField.setText(currency.format(total));
         }
         catch (NumberFormatException ex) {
-            amountTextField.setText("Enter amount");
-            amountTextField.selectAll();
-            amountTextField.requestFocus();
+            tipTextField.setText(currency.format(BigDecimal.ZERO));
+            totalTextField.setText(currency.format(BigDecimal.ZERO));
         }
     }
 
@@ -69,8 +68,12 @@ public class TipCalculatorController {
                         tipPercentage =
                                 BigDecimal.valueOf(newValue.intValue() / 100.0);
                         tipPercentageLabel.setText(percent.format(tipPercentage));
+                        calculate();
                     }
                 }
         );
+        amountTextField.textProperty().addListener((obs, oldVal, newVal) -> {
+            calculate();
+        });
     }
 }
